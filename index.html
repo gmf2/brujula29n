@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Brújula 29N - ¿Con quién encajas más?</title>
+<style>
+  :root{
+    --bg:#FAF6F3; --card:#FFFFFF; --ink:#221D1A; --mut:#7A716C;
+    --acc:#E91E63; --acc2:#7C4DFF; --no:#8D857F;
+    --pp:#1E6FD9; --psoe:#E30613; --vox:#63BE21; --fa:#8E44AD;
+    --sh:0 6px 24px rgba(34,29,26,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,'Segoe UI',Roboto,system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100dvh;display:flex;flex-direction:column}
+  .wrap{width:100%;max-width:560px;margin:0 auto;padding:0 18px;flex:1;display:flex;flex-direction:column}
+  header{padding:14px 0 6px;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-weight:800;font-size:17px;letter-spacing:.2px}
+  .logo b{color:var(--acc)}
+  .pill{font-size:11px;color:var(--mut);border:1px solid #E7DFDA;border-radius:999px;padding:4px 10px}
+  .screen{display:none;flex:1;flex-direction:column}
+  .screen.on{display:flex}
+  .hero{padding:26px 0 10px}
+  .hero h1{font-size:34px;line-height:1.08;font-weight:900;letter-spacing:-.5px}
+  .hero h1 span{color:var(--acc)}
+  .hero p{margin-top:14px;font-size:16px;color:var(--mut);line-height:1.45}
+  .feats{margin:22px 0;display:grid;gap:10px}
+  .feat{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center;font-size:14.5px;font-weight:600}
+  .feat .ic{font-size:20px}
+  .cta{margin:auto 0 26px;display:grid;gap:10px}
+  .btn{border:0;border-radius:16px;padding:17px;font-size:16.5px;font-weight:800;cursor:pointer;transition:transform .08s}
+  .btn:active{transform:scale(.97)}
+  .btn-pri{background:linear-gradient(135deg,var(--acc),#FF5C8A);color:#fff;box-shadow:0 10px 24px rgba(233,30,99,.35)}
+  .btn-sec{background:#EFE9E5;color:var(--ink)}
+  .priv{text-align:center;font-size:12px;color:var(--mut)}
+  .prog{height:7px;background:#EEE6E1;border-radius:99px;overflow:hidden;margin:10px 0 4px}
+  .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px;transition:width .3s}
+  .qnum{font-size:12.5px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:8px 0 4px}
+  .qtitle{font-size:24px;font-weight:900;margin:2px 0 4px}
+  .qhint{font-size:13.5px;color:var(--mut);margin-bottom:14px}
+  .opts{display:grid;gap:10px}
+  .opt{background:var(--card);border-radius:16px;padding:13px 14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center}
+  .opt .tx{flex:1;font-size:14.5px;line-height:1.38}
+  .vot{flex:none;display:flex;gap:8px}
+  .vot button{width:42px;height:42px;border-radius:50%;border:2px solid #E7DFDA;background:#fff;font-size:17px;font-weight:900;cursor:pointer;color:#B7AEA8;transition:all .12s}
+  .opt.y .vy{background:var(--acc);border-color:var(--acc);color:#fff}
+  .opt.n .vn{background:var(--no);border-color:var(--no);color:#fff}
+  .qnav{margin:auto 0 24px;display:flex;gap:10px;padding-top:18px}
+  .qnav .btn{flex:1}
+  .skip{background:none;border:0;color:var(--mut);font-size:13.5px;font-weight:700;padding:8px;cursor:pointer;flex:0 0 auto !important;align-self:center}
+  .rtitle{font-size:28px;font-weight:900;margin:16px 0 2px;letter-spacing:-.4px}
+  .rsub{color:var(--mut);font-size:14px;margin-bottom:16px;line-height:1.4}
+  .party{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:15px 16px;margin-bottom:11px}
+  .p-top{display:flex;align-items:center;gap:10px}
+  .p-dot{width:13px;height:13px;border-radius:50%;flex:none}
+  .p-name{font-weight:800;font-size:16.5px;flex:1}
+  .p-pct{font-weight:900;font-size:19px}
+  .p-bar{height:9px;background:#F0E9E5;border-radius:99px;margin-top:10px;overflow:hidden}
+  .p-bar i{display:block;height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .p-note{font-size:12.5px;color:var(--mut);margin-top:8px;line-height:1.4}
+  details{background:var(--card);border-radius:18px;box-shadow:var(--sh);margin:14px 0;overflow:hidden}
+  summary{padding:16px;font-weight:800;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  summary::after{content:'›';font-size:20px;color:var(--acc);transition:transform .2s}
+  details[open] summary::after{transform:rotate(90deg)}
+  .d-body{padding:0 16px 16px;font-size:13.5px;color:#4A423D;line-height:1.55}
+  .d-body .t{margin:14px 0 6px;font-weight:800;color:var(--ink);font-size:13.5px}
+  .mini{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .mini .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .mini .nm{width:110px;font-size:12.5px;font-weight:700;flex:none}
+  .mini .bar{flex:1;height:7px;background:#F0E9E5;border-radius:99px;overflow:hidden}
+  .mini .bar i{display:block;height:100%;border-radius:99px}
+  .mini .pc{width:88px;text-align:right;font-size:12px;font-weight:800;flex:none}
+  .d-body .row{display:flex;gap:8px;align-items:flex-start;margin-top:8px}
+  .d-body .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none}
+  .d-body .ref{color:var(--mut);font-size:11.5px}
+  .d-body a{color:var(--acc);font-weight:700;word-break:break-all}
+  .warn{background:#FFF8E6;border-radius:14px;padding:12px 14px;font-size:12.5px;color:#6B5B2E;line-height:1.45;margin:4px 0 14px}
+  .ans-y{color:var(--acc);font-weight:800}
+  .ans-n{color:var(--no);font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo">Brújula<b>29N</b></div><div class="pill">Elecciones generales · 29 nov 2026</div></header>
+
+  <!-- INTRO -->
+  <section class="screen on" id="s-intro">
+    <div class="hero">
+      <h1>¿Con quién<br>encajas <span>más</span>?</h1>
+      <p>12 temas, 90 propuestas reales de los programas del 29N. Marca si cada una te convence o no; mientras respondes no ves qué partido la firma, y al terminar se desvela quién propone qué y con quién coincides en cada tema.</p>
+    </div>
+    <div class="feats">
+      <div class="feat"><span class="ic">🗳️</span>Propuestas de PP, PSOE, Vox y Frente Amplio, de sus programas del 29N</div>
+      <div class="feat"><span class="ic">🙈</span>Respondes a ciegas: no aparece el partido que firma cada medida; se revela solo al terminar</div>
+      <div class="feat"><span class="ic">⚖️</span>Varios partidos pueden compartir una propuesta: cuenta para todos</div>
+    </div>
+    <div class="cta">
+      <button class="btn btn-pri" onclick="start('quick')">⚡ Versión rápida · 48 propuestas, unos 5 min</button>
+      <button class="btn btn-sec" onclick="start('full')" style="margin-top:10px">📋 Versión completa · las 90 propuestas</button>
+      <div style="margin-top:12px;font-size:13px;color:var(--mut)">La rápida usa una selección para que los cuatro partidos estén presentes en cada tema; el cálculo es el mismo.</div>
+      <div class="priv">Todo se calcula en tu dispositivo. No se guarda ni se envía nada.</div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="screen" id="s-quiz">
+    <div class="prog"><i id="pbar"></i></div>
+    <div class="qnum" id="qnum"></div>
+    <div class="qtitle" id="qtitle"></div>
+    <div class="qhint">Marca ✓ si te convence, ✗ si no. Lo que no marques no cuenta.</div>
+    <div class="opts" id="opts"></div>
+    <div class="qnav">
+      <button class="skip" onclick="skipTopic()">Saltar tema</button>
+      <button class="btn btn-pri" id="nextBtn" onclick="advance()">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="screen" id="s-res">
+    <div class="rtitle">Tu brújula 🧭</div>
+    <div class="rsub" id="rsub"></div>
+    <div id="rank"></div>
+    <details><summary>Resultado por temas</summary><div class="d-body" id="byTopic"></div></details>
+    <details><summary>Tus respuestas y de quién es cada una</summary><div class="d-body" id="byAnswer"></div></details>
+    <details><summary>Cómo se calcula</summary><div class="d-body">
+      Cada propuesta la firman uno o varios partidos en su programa. En cada tema, tu afinidad con un partido es el porcentaje de acuerdo sobre sus propuestas en las que te has posicionado (✓ cuenta como acuerdo, ✗ como desacuerdo; lo no marcado no cuenta). La afinidad global es la media de tus afinidades tema a tema; los temas que saltas no cuentan ni restan. Si usas la versión rápida, respondes una selección de 48 propuestas escogidas para que los cuatro partidos estén presentes en cada tema; el cálculo es idéntico.
+      <br><br>Los porcentajes son independientes: no reparten un 100% entre partidos y pueden empatar. Que un partido no tenga propuesta en un tema no significa que esté en contra: puede no detallarlo. Esto mide acuerdo con lo publicado, no recomienda ningún voto.
+    </div></details>
+    <details><summary>Fuentes (programas íntegros)</summary><div class="d-body" id="srcs"></div></details>
+    <div class="warn">Son propuestas de campaña, no hechos ni garantías de que se cumplan. Este test resume medidas principales de cada programa; no valora su viabilidad ni cubre todas las propuestas.</div>
+    <div class="cta"><button class="btn btn-sec" onclick="restart()">Volver a empezar</button></div>
+  </section>
+</div>
+<script>
+const PARTIES={pp:{n:'PP',c:'var(--pp)'},psoe:{n:'PSOE',c:'var(--psoe)'},vox:{n:'Vox',c:'var(--vox)'},fa:{n:'Frente Amplio',c:'var(--fa)'}};
+const S=(x,ps,ref)=>({x,ps,ref});
+const Q=(x,ps,ref)=>({x,ps,ref,q:1});
+const TOPICS=[
+{t:'Vivienda',e:'🏠',o:[
+Q('Crear un gran parque público de alquiler asequible: 1,5 millones de viviendas públicas en 12 años',['fa'],'FA §1.1'),
+S('Limitar por ley el alquiler en zonas tensionadas: lo menor entre el 25% de la renta media del barrio y el índice oficial',['fa'],'FA §1.3'),
+S('Expropiar progresivamente las viviendas de los grandes tenedores corporativos',['fa'],'FA §1.1'),
+Q('Congelar temporalmente las rentas de alquiler que superen los índices de referencia',['psoe'],'PSOE nº62'),
+S('Préstamos públicos de hasta 50.000 € sin intereses para comprar la primera vivienda',['psoe'],'PSOE nº67'),
+S('Construir un millón de viviendas más, agilizando suelo y licencias',['pp'],'PP nº144'),
+S('Derogar la Ley de Vivienda',['pp','vox'],'PP nº145 · Vox nº30'),
+S('Eliminar las zonas tensionadas y el índice de precios del alquiler',['pp'],'PP nº145'),
+Q('Aval público de hasta el 20% del valor para compradores de primera vivienda menores de 40 años',['pp'],'PP nº154'),
+S('Que el propietario recupere una vivienda ocupada en 48 horas por orden judicial',['pp'],'PP nº157'),
+Q('Desalojo de la vivienda ocupada en menos de 24 horas',['vox'],'Vox nº31'),
+S('Prioridad de las familias españolas en vivienda protegida y ayudas al alquiler',['vox'],'Vox nº27'),
+S('Primera vivienda habitual sin impuestos: IVA 0% y ITP bonificado al 100%',['vox'],'Vox nº34')]},
+{t:'Impuestos y autónomos',e:'💶',o:[
+S('Bajar el IRPF a las rentas de trabajo de hasta 27.000 €',['fa'],'FA §3.3'),
+S('Que las rentas del capital tributen como las del trabajo',['fa'],'FA §3.3'),
+S('Impuesto estatal a las herencias de más de 1 M€ y límite de 10 M€ por heredero',['fa'],'FA §3.2'),
+Q('Subir los tramos altos del ahorro (hasta el 35%) y los impuestos a las grandes tecnológicas',['psoe'],'PSOE nº130-131'),
+S('Convertir el mínimo por hijos en un crédito fiscal reembolsable que llegue a rentas bajas',['psoe'],'PSOE nº134'),
+Q('Que quien cobre el salario mínimo no pague IRPF',['pp','fa'],'PP nº177 · FA §3.3'),
+S('Menores de 35 años: IRPF reducido los 4 primeros años trabajando (100/75/50/25%)',['pp'],'PP nº179'),
+Q('IVA 0% a los alimentos básicos mientras dure la crisis de precios',['pp'],'PP nº180'),
+S('Simplificar y bajar IRPF, IVA y Sociedades, con tipos más bajos cuantos más hijos',['vox'],'Vox nº2'),
+Q('Autónomos: cuota de 0 € si no llegan al SMI y progresiva desde 50 € por encima',['vox'],'Vox nº2')]},
+{t:'Jornada laboral',e:'⏰',o:[
+Q('Avanzar hacia la jornada de 32 horas semanales sin bajar el sueldo, empezando por 37,5',['fa'],'FA · Trabajo'),
+S('Fijar por ley el salario mínimo al 60% del salario medio neto',['fa'],'FA · Trabajo'),
+Q('Completar las 37,5 horas y avanzar hacia las 35 por negociación colectiva, sin perder salario',['psoe'],'PSOE nº108'),
+S('Registro horario digital y fin de las horas extra ilegales',['psoe'],'PSOE nº109'),
+Q('Bancos de horas, horarios flexibles y teletrabajo para conciliar',['pp'],'PP nº162'),
+Q('Derogar la legislación laboral reciente para incentivar la contratación',['vox'],'Vox nº8')]},
+{t:'Pensiones',e:'👵',o:[
+Q('Que las pensiones suban cada año con el IPC',['pp','psoe','fa'],'PP nº108 · PSOE nº100 · FA · Pensiones'),
+S('Blindar el sistema público de pensiones en la Constitución',['psoe','fa'],'PSOE nº100 · FA · Pensiones'),
+S('Devolver la edad de jubilación a los 65 años',['fa'],'FA · Pensiones'),
+Q('Pensión mínima igual al salario mínimo',['fa'],'FA · Pensiones'),
+S('Eliminar los coeficientes reductores de la jubilación anticipada involuntaria tras 40 años cotizados',['fa'],'FA · Pensiones'),
+S('Mejorar los coeficientes de la jubilación anticipada involuntaria y de los trabajos penosos',['psoe'],'PSOE nº103'),
+Q('Incentivar la jubilación activa con deducciones en el IRPF',['pp'],'PP nº108'),
+Q('Sostener las pensiones con más empleo, mejores salarios y más natalidad',['vox'],'Vox nº7')]},
+{t:'Crianza y familias',e:'🧸',o:[
+Q('Prestación universal de 200 € al mes por cada menor de 18 años',['fa'],'FA §2.1'),
+S('Prestación estatal por crianza progresiva, con más apoyo a las rentas bajas',['psoe'],'PSOE nº192'),
+Q('Cuenta pública de 1.000 € al nacer, disponible a los 18 años para estudios o proyectos',['psoe'],'PSOE nº193'),
+S('Ayudas fiscales mensuales a todas las familias y mínimos familiares actualizados con la inflación',['pp'],'PP nº158'),
+Q('Escuela infantil gratuita de 0 a 3 años',['pp','vox','fa'],'PP nº163 · Vox nº94 · FA · Educación'),
+Q('Extender los beneficios de familia numerosa a todas las familias desde el primer hijo',['vox'],'Vox nº94'),
+S('Que el Estado cotice a la Seguridad Social por quien deja de trabajar para cuidar a sus hijos',['vox'],'Vox nº94')]},
+{t:'Sanidad',e:'🏥',o:[
+Q('Sanidad 100% pública y de gestión directa, con un suelo del 8% del PIB',['fa'],'FA · Sanidad'),
+S('Incluir salud bucodental, visual, auditiva y mental en la sanidad pública',['fa'],'FA · Sanidad'),
+S('Dental básico progresivo en la pública y, mientras, ayuda de hasta 200 € al año',['psoe'],'PSOE nº137'),
+Q('Plan urgente a nivel nacional para reducir las listas de espera',['pp','vox','psoe'],'PP nº219 · Vox nº62 · PSOE nº136'),
+Q('Al menos 4.500 médicos más en Atención Primaria',['pp'],'PP nº220'),
+S('Tarjeta sanitaria única e historia clínica compartida en toda España',['vox'],'Vox nº60'),
+Q('Excluir de la sanidad a extranjeros en situación irregular salvo urgencias graves',['vox'],'Vox nº20')]},
+{t:'Educación',e:'🎓',o:[
+Q('Educación pública con el 7% del PIB y gratuita desde los 0 años hasta la universidad',['fa'],'FA · Educación'),
+Q('Universalizar la educación de 0 a 3 años ampliando la oferta pública',['psoe'],'PSOE nº157'),
+Q('Que las familias puedan elegir colegio libremente en todo su municipio',['pp','vox'],'PP nº212 · Vox nº67'),
+S('Ningún concierto educativo se eliminará donde haya demanda suficiente',['pp'],'PP nº212'),
+S('Derogar la ley educativa actual y retirar contenidos ideológicos de las aulas',['vox'],'Vox nº69'),
+Q('Becas reforzadas para que nadie deje de estudiar por falta de recursos',['psoe','vox'],'PSOE nº158 · Vox nº68')]},
+{t:'Inmigración',e:'🌍',o:[
+Q('Procedimiento estable y permanente de regularización, eliminando barreras a derechos básicos',['fa'],'FA §16.2'),
+Q('Ampliar las vías legales y seguras de entrada y reforzar el sistema de acogida',['psoe'],'PSOE nº389'),
+S('Plan de integración y ciudadanía con 500 M€ iniciales',['psoe'],'PSOE nº388'),
+Q('Cupos anuales de inmigración laboral según vacantes y capacidad de acogida',['pp'],'PP nº41'),
+S('Prohibir las regularizaciones masivas',['pp','vox'],'PP nº42 · Vox nº9'),
+S('Que el arraigo sea solo un reconocimiento individual excepcional',['pp'],'PP nº42'),
+S('Suprimir el arraigo como vía de regularización',['vox'],'Vox nº11'),
+S('Expulsar a extranjeros condenados por delitos graves o multirreincidentes',['pp','vox'],'PP nº44 · Vox nº14'),
+S('Repatriar a quienes permanezcan en situación irregular',['vox'],'Vox nº12'),
+Q('Prioridad de los españoles en prestaciones y servicios sociales',['vox'],'Vox nº18')]},
+{t:'Energía',e:'⚡',o:[
+Q('Crear una comercializadora pública de energía',['fa'],'FA §5'),
+S('Tres horas diarias de luz gratis en las horas de mayor producción solar',['fa'],'FA §5'),
+S('Destinar el 3,5% del PIB anual a la transición ecológica',['fa'],'FA §5'),
+Q('Mantener el calendario de cierre de las centrales nucleares hasta 2035',['psoe','fa'],'PSOE nº240 · FA §5'),
+Q('Eliminar el calendario de cierre y mantener abiertas las centrales nucleares actuales',['pp','vox'],'PP nº228 · Vox nº8'),
+S('Estudiar la instalación de nuevas centrales nucleares junto a las actuales',['vox'],'Vox nº8'),
+Q('Revertir impuestos y restricciones del Pacto Verde Europeo y la Agenda 2030',['vox'],'Vox nº8')]},
+{t:'Instituciones y territorio',e:'🏛️',o:[
+Q('Avanzar hacia una república federal y plurinacional',['fa'],'FA §18.1'),
+Q('Ley de cooperación entre administraciones y lenguas cooficiales en las instituciones comunes',['psoe'],'PSOE nº384-385'),
+Q('Derogar la Ley de Amnistía',['pp'],'PP nº60'),
+S('Auditoría de todo el gasto del Estado en los primeros 100 días',['pp'],'PP nº1'),
+Q('Que los jueces elijan a los vocales judiciales del Consejo General del Poder Judicial',['pp','vox'],'PP nº72 · Vox nº100'),
+S('Recuperar el delito de sedición',['vox'],'Vox nº103')]},
+{t:'Derechos',e:'⚖️',o:[
+Q('Blindar el derecho al aborto en la Constitución',['psoe','fa'],'PSOE nº327 · FA · Sanidad y derechos'),
+Q('Reconocer las identidades no binarias y desplegar la Ley Trans',['fa'],'FA §15.2'),
+Q('Revisar la Ley Trans y eliminar la autodeterminación registral del sexo',['pp'],'PP · Igualdad'),
+Q('Proteger la vida desde la concepción hasta la muerte natural',['vox'],'Vox nº98'),
+S('Garantizar la objeción de conciencia de los profesionales sanitarios',['vox'],'Vox nº98')]},
+{t:'Defensa',e:'🛡️',o:[
+Q('Reducir el gasto militar y rechazar el objetivo de destinar el 5% del PIB a defensa',['fa'],'FA §17'),
+Q('Reforzar la defensa europea común y las compras conjuntas de armamento',['psoe'],'PSOE nº494'),
+Q('Reforzar la industria española de defensa y agilizar su contratación',['pp'],'PP nº55'),
+S('Reforzar los contingentes españoles de la OTAN cuando sea necesario',['pp'],'PP nº54'),
+Q('Aumentar la inversión en Defensa y dignificar la carrera militar',['vox'],'Vox nº89')]}
+];
+const SRCS=[
+ ['PP','https://www.pp.es/wp-content/uploads/2026/11/PROGRAMA-ELECTORAL-PP-2026-RECONSTRUCCION-NACIONAL.pdf'],
+ ['PSOE','https://lafuerzadelagente.es/programa/PROGRAMA_PSOE_29N26.pdf'],
+ ['Frente Amplio','https://frenteamplio.info/pdf/ProgramaFrenteAmplio.pdf'],
+ ['Vox','https://votasentidocomun.es/general/files/programa-elecct-vox.pdf']];
+</script>
+<script>
+let cur=0, ans={}, QT=TOPICS; // ans[topicIdx][optIdx] = 1 | -1
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0)}
+function start(mode){QT=(mode==='quick')?TOPICS.map(T=>({t:T.t,e:T.e,o:T.o.filter(o=>o.q)})):TOPICS;cur=0;ans={};renderTopic();show('s-quiz')}
+function renderTopic(){
+  const T=QT[cur];
+  document.getElementById('pbar').style.width=(cur/QT.length*100)+'%';
+  document.getElementById('qnum').textContent='Tema '+(cur+1)+' de '+QT.length;
+  document.getElementById('qtitle').textContent=T.e+' '+T.t;
+  const box=document.getElementById('opts');box.innerHTML='';
+  T.o.forEach((o,i)=>{
+    const v=ans[cur]&&ans[cur][i];
+    const d=document.createElement('div');d.className='opt'+(v===1?' y':v===-1?' n':'');
+    d.innerHTML='<span class="tx">'+o.x+'</span><span class="vot"><button class="vy" aria-label="Me convence">✓</button><button class="vn" aria-label="No me convence">✗</button></span>';
+    d.querySelector('.vy').onclick=()=>{setA(cur,i,1,d)};
+    d.querySelector('.vn').onclick=()=>{setA(cur,i,-1,d)};
+    box.appendChild(d);
+  });
+  document.getElementById('nextBtn').textContent=(cur===QT.length-1)?'Ver mi resultado':'Siguiente';
+}
+function setA(t,i,v,d){
+  if(!ans[t])ans[t]={};
+  if(ans[t][i]===v){delete ans[t][i];d.className='opt';}
+  else{ans[t][i]=v;d.className='opt '+(v===1?'y':'n');}
+}
+function skipTopic(){ans[cur]={};advance()}
+function advance(){cur++;if(cur>=QT.length){renderResults();show('s-res')}else renderTopic()}
+function restart(){show('s-intro')}
+function topicScore(ti,p){
+  let a=0,d=0;
+  QT[ti].o.forEach((o,i)=>{if(o.ps.includes(p)){const v=ans[ti]&&ans[ti][i];if(v===1)a++;else if(v===-1)d++}});
+  return (a+d)?{pct:Math.round(a/(a+d)*100),a,d}:null;
+}
+function renderResults(){
+  const pk=Object.keys(PARTIES);
+  let answeredTopics=0,totA=0,totD=0;
+  const data={};
+  pk.forEach(p=>data[p]={sum:0,nt:0,a:0,d:0});
+  QT.forEach((T,ti)=>{
+    let any=false;
+    pk.forEach(p=>{const s=topicScore(ti,p);if(s){any=true;data[p].sum+=s.pct;data[p].nt++;data[p].a+=s.a;data[p].d+=s.d}});
+    if(any)answeredTopics++;
+  });
+  pk.forEach(p=>{totA+=data[p].a;totD+=data[p].d});
+  const rows=pk.map(p=>({p,pct:data[p].nt?Math.round(data[p].sum/data[p].nt):null,d:data[p]})).sort((x,y)=>((y.pct??-1)-(x.pct??-1)));
+  document.getElementById('rsub').textContent=answeredTopics+' temas con respuestas, '+(totA+totD)+' propuestas valoradas ('+totA+' a favor, '+totD+' en contra). Tu porcentaje de acuerdo con las propuestas valoradas de cada partido:';
+  const rank=document.getElementById('rank');rank.innerHTML='';
+  rows.forEach(r=>{
+    const P=PARTIES[r.p];
+    const dv=document.createElement('div');dv.className='party';
+    const inner=r.pct===null
+      ?'<div class="p-top"><span class="p-dot" style="background:'+P.c+'"></span><span class="p-name">'+P.n+'</span><span class="p-pct">–</span></div><div class="p-note">Sin datos: no has valorado propuestas suyas</div>'
+      :'<div class="p-top"><span class="p-dot" style="background:'+P.c+'"></span><span class="p-name">'+P.n+'</span><span class="p-pct">'+r.pct+'%</span></div><div class="p-bar"><i style="background:'+P.c+'"></i></div><div class="p-note">Coincides en '+r.d.a+' de las '+(r.d.a+r.d.d)+' propuestas suyas que has valorado · el % es la media de tus acuerdos tema a tema, no el total de coincidencias</div>';
+    dv.innerHTML=inner;rank.appendChild(dv);
+    if(r.pct!==null)setTimeout(()=>{dv.querySelector('.p-bar i').style.width=Math.max(r.pct,2)+'%'},80);
+  });
+  const bt=document.getElementById('byTopic');bt.innerHTML='';
+  QT.forEach((T,ti)=>{
+    const scores=pk.map(p=>({p,s:topicScore(ti,p)}));
+    if(!scores.some(r=>r.s))return;
+    const t=document.createElement('div');t.className='t';t.textContent=T.e+' '+T.t;bt.appendChild(t);
+    scores.sort((a,b)=>((b.s?b.s.pct:-1)-(a.s?a.s.pct:-1))).forEach(r=>{
+      const P=PARTIES[r.p];const m=document.createElement('div');m.className='mini';
+      m.innerHTML='<span class="dot" style="background:'+P.c+'"></span><span class="nm">'+P.n+'</span><span class="bar"><i style="background:'+P.c+';width:'+(r.s?Math.max(r.s.pct,2):0)+'%"></i></span><span class="pc">'+(r.s?r.s.pct+'% · '+r.s.a+'/'+(r.s.a+r.s.d):'sin datos')+'</span>';
+      bt.appendChild(m);
+    });
+  });
+  const ba=document.getElementById('byAnswer');ba.innerHTML='';
+  QT.forEach((T,ti)=>{
+    if(!ans[ti])return;
+    const items=T.o.map((o,i)=>({o,i,v:ans[ti][i]})).filter(r=>r.v);
+    if(!items.length)return;
+    const t=document.createElement('div');t.className='t';t.textContent=T.e+' '+T.t;ba.appendChild(t);
+    items.forEach(r=>{
+      const names=r.o.ps.map(p=>PARTIES[p].n).join(' y ');
+      const refTxt=r.o.ps.length===1?r.o.ref.replace(/^(PP|PSOE|Vox|FA)[ ·]+/,''):r.o.ref;
+      const d=document.createElement('div');d.className='row';
+      d.innerHTML='<span class="'+(r.v===1?'ans-y':'ans-n')+'">'+(r.v===1?'✓':'✗')+'</span><span>'+r.o.x+'<br><span class="ref">'+names+' · '+refTxt+'</span></span>';
+      ba.appendChild(d);
+    });
+  });
+  const sc=document.getElementById('srcs');sc.innerHTML='';
+  SRCS.forEach(([n,u])=>{const d=document.createElement('div');d.style.margin='8px 0';d.innerHTML='<b>'+n+':</b><br><a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>';sc.appendChild(d)});
+}
+const q=new URLSearchParams(location.search),demo=q.get('demo');
+if(demo){
+  const st=document.createElement('style');st.textContent='*{animation:none!important;transition:none!important}';document.head.appendChild(st);
+  const b=document.createElement('div');b.style.cssText='position:sticky;top:0;z-index:9;background:#221D1A;color:#fff;text-align:center;font-size:12px;font-weight:800;padding:7px 4px;letter-spacing:.4px';b.textContent='DEMOSTRACIÓN · respuestas ficticias de ejemplo';document.body.prepend(b);
+  if(demo==='q'){start('full');cur=+(q.get('t')||0);ans[cur]={0:1,1:-1,3:1};renderTopic()}
+  if(demo==='r'||demo==='rd'){
+    start();
+    QT.forEach((T,ti)=>{ans[ti]={};T.o.forEach((o,i)=>{const h=(ti*7+i*13)%10;ans[ti][i]=h<4?1:h<7?-1:undefined})});
+    renderResults();show('s-res');
+    if(demo==='rd'){document.querySelectorAll('#s-res details')[+(q.get('d')||0)].open=true}
+  }
+}
+</script>
+</body>
+</html>
