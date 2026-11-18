@@ -51,6 +51,14 @@
   .opt.none .chk{border-radius:10px}
   .qnav{margin:auto 0 0;display:flex;gap:10px;padding:16px 0 calc(18px + env(safe-area-inset-bottom))}
   .qnav .btn{flex:1}
+  .qnav{flex-wrap:wrap}
+  .qnav .save-btn{flex-basis:100%;padding:14px;font-size:15px}
+  [hidden]{display:none!important}
+  .saved{background:#fff;border:2px solid #E91E63;border-radius:16px;padding:16px;margin:14px 0;display:grid;gap:10px}
+  .saved p{font-size:14px;line-height:1.5;color:var(--mut)}
+  .saved .btn{padding:14px;font-size:16px}
+  .save-status{font-size:14px;line-height:1.5;color:var(--mut);margin:8px 0}
+  .btn:focus-visible{outline:3px solid var(--acc2);outline-offset:3px}
   .rtitle{font-size:30px;font-weight:900;margin:18px 0 4px;letter-spacing:-.4px}
   .rsub{color:var(--mut);font-size:14.5px;margin-bottom:18px;line-height:1.45}
   .party{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:16px;margin-bottom:12px}
@@ -84,6 +92,18 @@
   <header><div class="logo"><svg width="27" height="27" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" fill="#fff" stroke="#221D1A" stroke-width="2.4"/><path d="M13 4.5 L16.2 13 L9.8 13 Z" fill="#E91E63"/><path d="M13 21.5 L16.2 13 L9.8 13 Z" fill="#221D1A"/><circle cx="13" cy="13" r="1.7" fill="#fff"/></svg>Brújula<b>29N</b></div><div class="pill">Elecciones generales · 29 nov 2026</div></header>
 
   <section class="screen on" id="s-intro">
+    <div class="saved" id="savedPanel" hidden>
+      <strong id="savedTitle">Tienes un test guardado</strong>
+      <p id="savedInfo"></p>
+      <button class="btn btn-pri" id="continueBtn" onclick="resume()">Continuar</button>
+      <button class="btn btn-sec" id="deleteBtn" onclick="askDelete()">Borrar test guardado</button>
+      <div id="replacePanel" hidden>
+        <p id="replaceInfo"></p>
+        <button class="btn btn-sec" onclick="confirmReplace()">Sí, borrar guardado</button>
+        <button class="btn btn-sec" onclick="cancelReplace()">Cancelar</button>
+      </div>
+    </div>
+    <p class="save-status" id="introStatus" role="status" aria-live="polite"></p>
     <div class="hero">
       <h1>¿Con quién<br>encajas <span>más</span>?</h1>
       <p>Elige cuánto rato tienes: 25 o 43 preguntas concretas. En cada una, la posición de cada partido sobre ese asunto según su programa del 29N, sin siglas. Marca la que te convence (si te valen dos, marca dos; si ninguna, dilo) y al final se desvela de quién es cada una.</p>
@@ -96,7 +116,7 @@
     <div class="cta">
       <button class="btn btn-pri" onclick="start('quick')">Test rápido · 25 preguntas, unos 7 min</button>
       <button class="btn btn-sec" onclick="start('full')">Test completo · 43 preguntas, unos 13 min</button>
-      <div class="priv">Todo se calcula en tu dispositivo. No se guarda ni se envía nada.</div>
+      <div class="priv">Todo se calcula en tu dispositivo. Con «Guardar y salir», tus respuestas quedan solo en este navegador, sin cookies ni envío a servidores. Al borrar los datos de la web o cerrar el modo incógnito, puedes perderlas. En un dispositivo compartido, otra persona podría continuar tu test. Puedes borrar el guardado cuando quieras.</div>
     </div>
   </section>
 
@@ -106,7 +126,9 @@
     <div class="qtitle" id="qtitle"></div>
     <div class="qhint">Marca la posición que más te convence. Si te valen dos, marca dos. Si ninguna, usa «Ninguna me convence».</div>
     <div class="opts" id="opts"></div>
+    <p class="save-status" id="quizStatus" role="status" aria-live="polite"></p>
     <div class="qnav">
+      <button class="btn btn-sec save-btn" onclick="saveAndExit()">Guardar y salir</button>
       <button class="btn btn-pri" id="nextBtn" onclick="advance()">Siguiente</button>
     </div>
   </section>
@@ -341,15 +363,78 @@ const SRCS=[
  ['Vox','https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf']];
 
 const QUICK=new Set(['El precio del alquiler','Las centrales nucleares','La jornada laboral','La regularización de quien ya está en situación irregular','La ayuda por tener hijos','Los impuestos','La educación','Las pensiones','La defensa','El aborto','La Ley Trans','La vivienda okupada','La sanidad y los extranjeros en situación irregular','El modelo territorial','La vivienda pública','Comprar la primera vivienda','Las listas de espera y la sanidad pública','La violencia machista y las leyes de igualdad','La memoria democrática','Las lenguas cooficiales','El agua y la sequía','Los menores y las redes sociales','La inteligencia artificial','Los autónomos','Las emergencias y las catástrofes']);
-let cur=0, ans={}, order=[], QS=[];
+const SAVE_KEY='brujula29n.saved.v1';
+// Invalidates saved answers if questions, options or quick-mode membership change.
+const SAVE_SCHEMA=JSON.stringify([QUESTIONS,[...QUICK]]);
+let cur=0, ans={}, order=[], QS=[], activeMode='quick', pendingMode=null, saved=null;
+function validSave(s){
+  if(!s||s.v!==1||s.schema!==SAVE_SCHEMA||!['quick','full'].includes(s.mode))return false;
+  const qs=QUESTIONS.filter(q=>s.mode==='full'||QUICK.has(q.q));
+  if(!Number.isInteger(s.cur)||s.cur<0||s.cur>=qs.length||!Array.isArray(s.order)||s.order.length!==qs.length||!s.ans||typeof s.ans!=='object'||Array.isArray(s.ans))return false;
+  if(!s.order.every((r,i)=>Array.isArray(r)&&r.length===qs[i].o.length&&new Set(r).size===r.length&&r.every(n=>Number.isInteger(n)&&n>=0&&n<r.length)))return false;
+  return Object.entries(s.ans).every(([k,a])=>{
+    const i=Number(k);
+    if(!/^\d+$/.test(k)||!Number.isInteger(i)||i<0||i>=qs.length||!a||typeof a!=='object'||Array.isArray(a))return false;
+    const keys=Object.keys(a);
+    return keys.every(j=>j==='none'?typeof a[j]==='boolean':/^\d+$/.test(j)&&Number(j)<qs[i].o.length&&a[j]===1)&&(!a.none||keys.every(j=>j==='none'));
+  });
+}
+function loadSave(){
+  saved=null;
+  const panel=document.getElementById('savedPanel');
+  panel.hidden=true;cancelReplace();
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return;
+    panel.hidden=false;
+    let data;try{data=JSON.parse(raw)}catch(e){}
+    const valid=validSave(data);
+    document.getElementById('continueBtn').hidden=!valid;
+    document.getElementById('savedTitle').textContent=valid?'Tienes un test guardado':'Guardado no compatible';
+    document.getElementById('savedInfo').textContent=valid?('Test '+(data.mode==='full'?'completo':'rápido')+' · pregunta '+(data.cur+1)+' de '+data.order.length+'. Continuar recupera también las opciones que marcaste en esa pregunta.'):'Este guardado no se puede recuperar en esta versión. Puedes borrarlo y empezar otro test.';
+    if(valid)saved=data;
+  }catch(e){document.getElementById('introStatus').textContent='Este navegador no permite acceder al guardado local. Puedes hacer el test, pero quizá no puedas guardarlo.'}
+}
+function cancelReplace(){pendingMode=null;document.getElementById('replacePanel').hidden=true}
+function askReplace(mode){
+  pendingMode=mode;document.getElementById('replacePanel').hidden=false;
+  document.getElementById('replaceInfo').textContent=mode?'Empezar otro test borrará el anterior guardado. ¿Quieres borrarlo y empezar el nuevo?':'¿Quieres borrar de este navegador el test guardado? No se podrá recuperar.';
+}
+function askDelete(){askReplace(null)}
+function confirmReplace(){
+  const mode=pendingMode;
+  try{localStorage.removeItem(SAVE_KEY)}catch(e){document.getElementById('introStatus').textContent='No se pudo borrar el guardado. Revisa los permisos de almacenamiento del navegador.';return}
+  loadSave();document.getElementById('introStatus').textContent='Test guardado borrado.';
+  if(mode)start(mode);
+}
+function saveAndExit(){
+  const data={v:1,schema:SAVE_SCHEMA,mode:activeMode,cur,ans,order};
+  try{
+    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
+    if(localStorage.getItem(SAVE_KEY)!==JSON.stringify(data))throw Error('save');
+  }catch(e){document.getElementById('quizStatus').textContent='No se ha podido guardar. Tus respuestas siguen aquí: no cierres esta página. Revisa el espacio o los permisos del navegador.';return}
+  loadSave();show('s-intro');
+  document.getElementById('introStatus').textContent='Test guardado en este navegador. Ya puedes cerrar la página y continuar al volver.';
+  document.getElementById('continueBtn').focus();
+}
+function resume(){
+  loadSave();if(!saved)return;
+  activeMode=saved.mode;cur=saved.cur;ans=saved.ans;order=saved.order;
+  QS=QUESTIONS.filter(q=>activeMode==='full'||QUICK.has(q.q));
+  renderQ();show('s-quiz');
+  document.getElementById('quizStatus').textContent='Test recuperado. Antes de salir otra vez, pulsa «Guardar y salir» para conservar los nuevos cambios.';
+}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0)}
 function start(mode){
+  if(!document.getElementById('savedPanel').hidden){askReplace(mode);return}
+  activeMode=mode;document.getElementById('introStatus').textContent='';
   QS=QUESTIONS.filter(q=>mode==='full'||QUICK.has(q.q));
   cur=0;ans={};
   order=QS.map(Q=>{const idx=Q.o.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}return idx});
   renderQ();show('s-quiz');
 }
 function renderQ(){
+  document.getElementById('quizStatus').textContent='';
   const Q=QS[cur];
   document.getElementById('pbar').style.width=(cur/QS.length*100)+'%';
   document.getElementById('qnum').textContent='Pregunta '+(cur+1)+' de '+QS.length;
@@ -378,8 +463,11 @@ function renderNone(box){
   const isNone=ans[cur]&&ans[cur].none;
   const none=box.querySelector('.none');if(none)none.className='opt none'+(isNone?' y':'');
 }
-function advance(){cur++;if(cur>=QS.length){renderResults();show('s-res')}else renderQ()}
-function restart(){show('s-intro')}
+function advance(){cur++;if(cur>=QS.length){
+  renderResults();show('s-res');
+  try{localStorage.removeItem(SAVE_KEY)}catch(e){}
+}else renderQ()}
+function restart(){loadSave();document.getElementById('introStatus').textContent='';show('s-intro')}
 function renderResults(){
   const QUESTIONS=QS;
   const pk=Object.keys(PARTIES);
@@ -430,6 +518,7 @@ function renderResults(){
   const sc=document.getElementById('srcs');sc.innerHTML='';
   SRCS.forEach(([n,u])=>{const d=document.createElement('div');d.style.margin='8px 0';d.innerHTML='<b>'+n+':</b><br><a href="'+u+'" target="_blank" rel="noopener" style="color:var(--acc);font-weight:700;word-break:break-all">'+u+'</a>';sc.appendChild(d)});
 }
+loadSave();
 </script>
 </body>
 </html>
