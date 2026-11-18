@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Brújula 29N - 14 preguntas</title>
+<title>Brújula 29N</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='11.5' fill='%23fff' stroke='%23221D1A' stroke-width='2.4'/%3E%3Cpath d='M13 4.5 L16.2 13 L9.8 13 Z' fill='%23E91E63'/%3E%3Cpath d='M13 21.5 L16.2 13 L9.8 13 Z' fill='%23221D1A'/%3E%3Ccircle cx='13' cy='13' r='1.7' fill='%23fff'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -29,7 +29,8 @@
   .hero p{margin-top:16px;font-size:17px;color:var(--mut);line-height:1.5}
   .feats{margin:24px 0;display:grid;gap:12px}
   .feat{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center;font-size:15.5px;font-weight:600;line-height:1.4}
-  .feat .ic{font-size:22px}
+  .feat .ic{font-size:22px;flex:none}
+  .feat .ic svg{display:block}
   .cta{margin:auto 0 26px;display:grid;gap:10px;padding-top:18px}
   .btn{border:0;border-radius:16px;padding:18px;font-size:17px;font-weight:800;cursor:pointer;transition:transform .08s;line-height:1.3}
   .btn:active{transform:scale(.97)}
@@ -85,15 +86,16 @@
   <section class="screen on" id="s-intro">
     <div class="hero">
       <h1>¿Con quién<br>encajas <span>más</span>?</h1>
-      <p>14 preguntas concretas. En cada una, la posición de cada partido sobre ese asunto según su programa del 29N, sin siglas. Marca la que te convence —si te valen dos, marca dos; si ninguna, dilo— y al final se desvela de quién es cada una.</p>
+      <p>Elige cuánto rato tienes: 25 o 43 preguntas concretas. En cada una, la posición de cada partido sobre ese asunto según su programa del 29N, sin siglas. Marca la que te convence (si te valen dos, marca dos; si ninguna, dilo) y al final se desvela de quién es cada una.</p>
     </div>
     <div class="feats">
       <div class="feat"><span class="ic">🗳️</span>PP, PSOE, Vox y Frente Amplio, con la referencia exacta de cada posición en su programa</div>
-      <div class="feat"><span class="ic">🙈</span>Respondes a ciegas: no aparece qué partido defiende cada opción</div>
+      <div class="feat"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8c2.1 0 3.9.7 5.3 1.8M21.5 12S18 18.2 12 18.2c-2.1 0-3.9-.7-5.3-1.8" fill="none" stroke="#221D1A" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="#221D1A" stroke-width="2"/><line x1="4.5" y1="19.5" x2="19.5" y2="4.5" stroke="#E91E63" stroke-width="2.2" stroke-linecap="round"/></svg></span>Respondes a ciegas: no aparece qué partido defiende cada opción</div>
       <div class="feat"><span class="ic">⚖️</span>Si en un asunto no se localiza una posición comparable de un partido en su programa, lo verás dicho: no se rellena</div>
     </div>
     <div class="cta">
-      <button class="btn btn-pri" onclick="start()">Empezar · 14 preguntas, unos 4 min</button>
+      <button class="btn btn-pri" onclick="start('quick')">Test rápido · 25 preguntas, unos 7 min</button>
+      <button class="btn btn-sec" onclick="start('full')">Test completo · 43 preguntas, unos 13 min</button>
       <div class="priv">Todo se calcula en tu dispositivo. No se guarda ni se envía nada.</div>
     </div>
   </section>
@@ -194,25 +196,163 @@ Q('El modelo territorial','🏛️',[
  {x:'Consolidar el uso de las lenguas cooficiales en las Cortes Generales y en la Administración del Estado.',ps:['psoe'],ref:'PSOE nº385'},
  {x:'Reforzar la presencia del Estado donde se ha debilitado, con un Plan Nacional de Presencia del Estado.',ps:['pp'],ref:'PP · Instituciones'},
  {x:'Defender la unidad y la integridad territorial: recuperar el delito de sedición e ilegalizar los partidos que atenten contra ellas.',ps:['vox'],ref:'Vox nº103'}],
- [])
+ []),
+Q('La vivienda pública','🏘️',[
+ {x:'Invertir el 1% del PIB cada año para levantar un gran parque público de 1,5 millones de viviendas, mayoritariamente en alquiler.',ps:['fa'],ref:'FA §1.1'},
+ {x:'Crear un parque público estatal de 100.000 viviendas para venta o alquiler asequible y acercar el parque público a la media europea.',ps:['psoe'],ref:'PSOE nº39 y nº42'},
+ {x:'Construir un millón de viviendas movilizando suelo público y privado, con licencias resueltas en tres meses.',ps:['pp'],ref:'PP nº144'},
+ {x:'Aumentar con urgencia la construcción de vivienda protegida mediante promoción y colaboración público-privada.',ps:['vox'],ref:'Vox nº29'}]),
+Q('Los desahucios','🚪',[
+ {x:'Erradicar totalmente los desahucios sin alternativa habitacional.',ps:['fa'],ref:'FA §1.4'},
+ {x:'Blindar la protección frente a los desahucios de personas vulnerables sin alternativa, y que el coste lo asuman las administraciones y no el pequeño propietario.',ps:['psoe'],ref:'PSOE nº84-85'}],
+ [{p:'pp',why:'El programa examinado actúa sobre la ocupación ilegal (nº157), sin una medida localizada sobre desahucios.'},{p:'vox',why:'El programa examinado actúa sobre la okupación (nº31), sin una medida localizada sobre desahucios.'}]),
+Q('Los fondos de inversión y la vivienda','🏢',[
+ {x:'Mantener y garantizar la limitación de la compra de viviendas por fondos especulativos.',ps:['psoe'],ref:'PSOE nº71'},
+ {x:'Suprimir los privilegios fiscales de las SOCIMI: las viviendas, para vivir y no para especular.',ps:['fa'],ref:'FA §1.2 y §1.7'},
+ {x:'Prioridad nacional para acceder a vivienda protegida o ayudas al alquiler, y fiscalidad disuasoria para compradores no comunitarios y fondos.',ps:['vox'],ref:'Vox nº27 y nº35'}],
+ [{p:'pp',why:'El programa examinado se centra en construir más vivienda (nº144), sin una posición localizada sobre la compra por fondos de inversión.'}]),
+Q('Comprar la primera vivienda','🏡',[
+ {x:'Bajar el IVA de la primera vivienda del 10% al 4% para menores de 40 años y que el Estado avale hasta el 20% de la entrada.',ps:['pp'],ref:'PP nº153-154'},
+ {x:'IVA del 0% y bonificación del 100% del ITP para la primera vivienda habitual, y recuperar la deducción por inversión en vivienda habitual.',ps:['vox'],ref:'Vox nº34'},
+ {x:'Más de 25.000 millones en avales y préstamos del ICO para vivienda asequible, y una garantía pública de acceso al alquiler para jóvenes.',ps:['psoe'],ref:'PSOE nº55 y nº64'},
+ {x:'Exención total del ITP en la compra de la primera vivienda habitual, con topes de ingresos y de precio.',ps:['fa'],ref:'FA §1.7'}]),
+Q('Los pisos turísticos','🛏️',[
+ {x:'Extinguir progresivamente todas las licencias de pisos turísticos en zonas tensionadas, en un máximo de 3 años, para devolverlos al uso residencial.',ps:['fa'],ref:'FA §1.2'},
+ {x:'Perseguir el fraude en los alojamientos de corta duración y limitar los nuevos usos no residenciales en las zonas tensionadas.',ps:['psoe'],ref:'PSOE nº77-78'},
+ {x:'Regular la proliferación masiva de pisos turísticos y reforzar la inspección de los ilegales.',ps:['vox'],ref:'Vox nº30'}],
+ [{p:'pp',why:'Sin posición localizada sobre los pisos turísticos en el programa examinado.'}]),
+Q('Las listas de espera y la sanidad pública','💊',[
+ {x:'Acabar con las listas de espera con una financiación del 7% del PIB y limitar la privatización: la gestión directa será la modalidad preferente.',ps:['psoe'],ref:'PSOE nº136 y nº138'},
+ {x:'Revertir las privatizaciones y recuperar la gestión directa de los servicios privatizados, salvo justificación objetiva.',ps:['fa'],ref:'FA §2.4'},
+ {x:'Plan nacional de reducción de listas de espera, con colaboración público-privada cuando ayude a reducir demoras.',ps:['vox'],ref:'Vox nº62'},
+ {x:'Un gran Pacto de Estado por la Sanidad y un plan urgente de reducción de listas de espera acordado con las comunidades.',ps:['pp'],ref:'PP nº219'}]),
+Q('Las fronteras','🛂',[
+ {x:'Más agentes y Frontex en la frontera sur: identificación en un máximo de siete días y devoluciones sin demora.',ps:['pp'],ref:'PP nº36-37'},
+ {x:'Un nuevo modelo de protección permanente de las fronteras con participación de las Fuerzas Armadas.',ps:['vox'],ref:'Vox nº88'}],
+ [{p:'psoe',why:'El programa examinado propone ampliar las vías legales de entrada y reforzar la acogida (nº389), sin una medida de control de fronteras comparable localizada.'},{p:'fa',why:'El programa examinado propone vías legales y regularización (§16.2), sin una medida de control de fronteras comparable localizada.'}]),
+Q('Los menores migrantes que llegan solos','👦',[
+ {x:'Priorizar la reunificación familiar y el retorno seguro a sus países, resolviendo la determinación de la edad en 72 horas.',ps:['pp'],ref:'PP nº46'},
+ {x:'Devolverlos con sus padres o con las instituciones de tutela de sus países de origen, atendiendo al interés superior del menor.',ps:['vox'],ref:'Vox nº15'},
+ {x:'Protección especializada: una Unidad de Apoyo a la Infancia Migrante y el interés superior del menor siempre en el centro.',ps:['psoe'],ref:'PSOE nº200 y nº391'}],
+ [{p:'fa',why:'Sin una medida específica localizada sobre menores migrantes no acompañados en el programa examinado.'}]),
+Q('La violencia machista y las leyes de igualdad','🚺',[
+ {x:'Derogar las leyes de género y sustituirlas por normas que protejan a las víctimas sin criminalizar a los hombres.',ps:['vox'],ref:'Vox nº47'},
+ {x:'Aprobar una nueva Estrategia Estatal para combatir las Violencias Machistas.',ps:['psoe'],ref:'PSOE nº333'},
+ {x:'Pulseras de seguimiento fiables bajo el Ministerio del Interior, servicios integrados en VioGen y más medios para las unidades especializadas.',ps:['pp'],ref:'PP nº28'},
+ {x:'Erradicar la violencia machista con redes sólidas de prevención y acogida, y coeducación en las aulas.',ps:['fa'],ref:'FA §2.7'}]),
+Q('La memoria democrática','🕊️',[
+ {x:'Derogar la Ley de Memoria Democrática y sustituirla por una Ley de Concordia.',ps:['pp'],ref:'PP nº129'},
+ {x:'Superarla por ser una ley ideológica que divide y enfrenta a los españoles.',ps:['vox'],ref:'Vox nº46'},
+ {x:'Completar las exhumaciones, resignificar el Valle de Cuelgamuros y retirar la simbología franquista.',ps:['psoe'],ref:'PSOE nº420-422'},
+ {x:'Desarrollar la Ley de Memoria Democrática: reparación integral de las víctimas, Banco Estatal de ADN y cierre de fundaciones franquistas.',ps:['fa'],ref:'FA §18.6'}]),
+Q('Las lenguas cooficiales','🗣️',[
+ {x:'Garantizar el derecho a recibir enseñanza en castellano en toda España y que el castellano vuelva a ser la lengua de trabajo del Congreso.',ps:['pp'],ref:'PP nº96 y nº127'},
+ {x:'Consolidar el uso de las lenguas cooficiales en las Cortes Generales y lograr su reconocimiento como lenguas oficiales de la UE.',ps:['psoe'],ref:'PSOE nº385 y nº485'},
+ {x:'Aprobar una ley del plurilingüismo y un plan estatal para aprender y divulgar las lenguas cooficiales en todo el Estado.',ps:['fa'],ref:'FA §18.1 y §2.5'}],
+ [{p:'vox',why:'Sin posición general localizada sobre las lenguas cooficiales; el programa examinado pide que desconocerlas no perjudique en las oposiciones sanitarias (nº60).'}]),
+Q('La financiación de las comunidades autónomas','💰',[
+ {x:'Impulsar el nuevo sistema de financiación propuesto por el Gobierno, que aporta 21.000 millones adicionales a las comunidades.',ps:['psoe'],ref:'PSOE nº229'},
+ {x:'Avanzar hacia un federalismo social y plurinacional, con al menos un 2,3% del PIB adicional cada año para la financiación autonómica.',ps:['fa'],ref:'FA §11.1'},
+ {x:'Un nuevo modelo acordado de forma multilateral: ninguna comunidad saldrá del sistema común ni habrá regímenes singulares negociados a dos bandas.',ps:['pp'],ref:'PP nº100-101'}],
+ [{p:'vox',why:'Sin propuesta de financiación autonómica localizada en el programa examinado (defiende «España, un solo mercado», nº42).'}]),
+Q('Quién elige al Consejo General del Poder Judicial','📋',[
+ {x:'Que los jueces y magistrados elijan a los doce vocales judiciales del CGPJ, terminando con las cuotas partidistas.',ps:['pp','vox'],ref:'PP nº72 · Vox nº100'},
+ {x:'Que ningún partido pueda bloquear la renovación: si en dos meses no hay acuerdo, segunda votación por mayoría absoluta.',ps:['fa'],ref:'FA §18.7'}],
+ [{p:'psoe',why:'El programa examinado propone ampliar las plantillas judiciales y reformar el acceso a la carrera (nº434-435), sin una propuesta localizada sobre la elección del CGPJ.'}]),
+Q('Los aforamientos de los cargos públicos','👔',[
+ {x:'Suprimir los aforamientos de los cargos públicos para los delitos ajenos al ejercicio de su cargo.',ps:['psoe'],ref:'PSOE nº373'},
+ {x:'Revisar los aforamientos para devolverlos a una concepción limitada y reformar el suplicatorio para que no sea un instrumento de impunidad.',ps:['pp'],ref:'PP nº61'}],
+ [{p:'vox',why:'Sin posición localizada sobre los aforamientos en el programa examinado.'},{p:'fa',why:'Sin posición localizada sobre los aforamientos en el programa examinado.'}]),
+Q('El recibo de la luz','💡',[
+ {x:'Bajar los impuestos de la electricidad para familias y empresas.',ps:['pp','vox'],ref:'PP nº229 · Vox nº8'},
+ {x:'Defender la reforma del mercado eléctrico europeo para que las renovables abaraten el recibo de hogares y empresas.',ps:['psoe'],ref:'PSOE nº239'},
+ {x:'Reformar el sistema marginalista que fija los precios del pool eléctrico.',ps:['fa'],ref:'FA §5.1'}]),
+Q('El agua y la sequía','💧',[
+ {x:'Un Pacto Nacional del Agua con hasta 40.000 millones hasta 2030: modernizar regadíos, desalación y reutilización.',ps:['pp'],ref:'PP nº126'},
+ {x:'Un Plan Nacional del Agua que interconecte todas las cuencas para una gestión más eficiente.',ps:['vox'],ref:'Vox nº115'},
+ {x:'Bancos públicos de agua en las confederaciones y un mínimo vital de agua potable garantizado para los hogares vulnerables.',ps:['psoe'],ref:'PSOE nº260 y nº263'},
+ {x:'El agua como bien público: ciclo 100% de gestión pública directa y gravar el exceso de consumo.',ps:['fa'],ref:'FA §5.6'}]),
+Q('Los toros','🐂',[
+ {x:'Defender la tauromaquia como tradición cultural y promoverla.',ps:['pp','vox'],ref:'PP nº136 · Vox nº77'},
+ {x:'Derogar la ley que protege la tauromaquia como patrimonio cultural y acabar con su financiación pública.',ps:['fa'],ref:'FA §5.7'}],
+ [{p:'psoe',why:'El programa examinado propone retirar la financiación pública a las prácticas que amparen maltrato animal (nº295), sin una mención expresa a la tauromaquia localizada.'}]),
+Q('Los menores y las redes sociales','📱',[
+ {x:'Prohibir las redes sociales antes de los 16 años, con verificación obligatoria de la edad.',ps:['psoe'],ref:'PSOE nº399'},
+ {x:'Ninguna cuenta antes de los 14 años, y hasta los 16 solo con autorización de los padres.',ps:['pp'],ref:'PP nº168'},
+ {x:'Regulación severa de las plataformas dirigidas a menores de 16 años: verificación de edad y eliminación de funciones adictivas.',ps:['fa'],ref:'FA §2.8'},
+ {x:'Proteger a los menores frente a los riesgos de los entornos digitales: adicción al juego, pornografía y delitos.',ps:['vox'],ref:'Vox nº97'}]),
+Q('La inteligencia artificial','💻',[
+ {x:'Una ley de buen uso de la IA: supervisión humana, etiquetado obligatorio de contenidos generados y sanciones de hasta 35 millones.',ps:['psoe'],ref:'PSOE nº406'},
+ {x:'Un código de transparencia algorítmica y el derecho de cada persona a elegir el sistema de recomendación de sus contenidos.',ps:['fa'],ref:'FA §14.2'},
+ {x:'Un cheque de formación en IA para cada trabajador, que conservará aunque cambie de empresa.',ps:['pp'],ref:'PP nº169'},
+ {x:'Sumar a España a la carrera de la inteligencia artificial como motor de desarrollo de la economía.',ps:['vox'],ref:'Vox nº37'}]),
+Q('Los autónomos','💼',[
+ {x:'Cuota cero el primer año de actividad, y ni cobrar ni declarar IVA por debajo de 85.000 € de facturación.',ps:['pp'],ref:'PP nº170-171'},
+ {x:'Cuota de 0 € mientras los ingresos no lleguen al salario mínimo, y progresiva desde 50 € al superarlo.',ps:['vox'],ref:'Vox nº2'},
+ {x:'Tarifa plana de 88 € vinculada a los ingresos mientras no se llegue al SMI, y exención de IVA por debajo de 85.000 €.',ps:['fa'],ref:'FA §8.1'}],
+ [{p:'psoe',why:'Sin un paquete comparable localizado en el programa examinado (menciona las prestaciones extraordinarias a autónomos en contextos de crisis).'}]),
+Q('Los permisos de padres y madres','👶',[
+ {x:'Ampliar los permisos por nacimiento y dar más flexibilidad para decidir cómo y cuándo disfrutarlos.',ps:['pp'],ref:'PP nº160'},
+ {x:'Permisos parentales retribuidos, extensión a familias monoparentales y autónomos, y reducción de jornada para cuidar menores hasta los 16 años.',ps:['psoe'],ref:'PSOE nº325-326'},
+ {x:'Ampliar los permisos retribuidos por cuidado de menores y de familiares.',ps:['fa'],ref:'FA §2.2'},
+ {x:'Combatir la brecha maternal: formación y reincorporación de las madres e incentivos a las empresas que concilien.',ps:['vox'],ref:'Vox nº99'}]),
+Q('La Administración y los empleados públicos','🗂️',[
+ {x:'Menos ministerios, altos cargos y asesores, y venta de las empresas públicas que no sean estratégicas.',ps:['pp'],ref:'PP nº3'},
+ {x:'Auditoría integral y reducción radical del gasto: eliminar las subvenciones a partidos, sindicatos, patronales y ONG.',ps:['vox'],ref:'Vox nº43'},
+ {x:'Una nueva Ley de Función Pública: menos temporalidad, convocatorias regulares y dirección pública profesional.',ps:['psoe'],ref:'PSOE nº443'},
+ {x:'Dignificar el empleo público: garantizar el poder adquisitivo y reducir la temporalidad al 8%.',ps:['fa'],ref:'FA §10.1'}]),
+Q('Las normas y la burocracia','📎',[
+ {x:'Derogar tres normas vigentes por cada norma nueva que se apruebe.',ps:['pp','vox'],ref:'PP nº7 · Vox nº40'},
+ {x:'Que ninguna Administración vuelva a pedirte un documento que ya tiene otra administración.',ps:['psoe'],ref:'PSOE nº440'},
+ {x:'Ventanilla única y una sola declaración informativa anual para autónomos y pequeñas empresas.',ps:['fa'],ref:'FA §8.1'}]),
+Q('Las emergencias y las catástrofes','🚨',[
+ {x:'Que el Gobierno central actúe desde el primer momento, con un mando único de protección civil y emergencias.',ps:['pp'],ref:'PP nº49'},
+ {x:'Crear la Agencia Estatal de Protección Civil y Emergencias para coordinar la respuesta.',ps:['psoe'],ref:'PSOE nº252'},
+ {x:'Reforzar el Sistema Nacional de Protección Civil: prevención, coordinación y más medios.',ps:['vox'],ref:'Vox nº90'},
+ {x:'Crear una Agencia Estatal de Prevención y Adaptación Climática y protocolizar las alertas de protección civil.',ps:['fa'],ref:'FA §5.3'}]),
+Q('La ayuda al desarrollo','🌐',[
+ {x:'Llevar la cooperación internacional hasta el 0,7% de la Renta Nacional Bruta.',ps:['psoe','fa'],ref:'PSOE nº459 · FA §17.2'},
+ {x:'Auditar la cooperación y reorientarla a la estabilización de los países, de modo que contribuya a disminuir la inmigración irregular.',ps:['pp'],ref:'PP nº247'},
+ {x:'Retirar la cooperación a los países que no colaboren en la gestión de los flujos migratorios.',ps:['vox'],ref:'Vox nº17'}]),
+Q('La Ley de Seguridad Ciudadana (la «ley mordaza»)','✊',[
+ {x:'Derogarla por completo.',ps:['fa'],ref:'FA §18.3'},
+ {x:'Sustituirla por una ley que garantice los derechos de reunión y manifestación, con cámaras corporales en Policía y Guardia Civil.',ps:['psoe'],ref:'PSOE nº431'},
+ {x:'Endurecer la respuesta ante los disturbios: ocultar el rostro agravará la responsabilidad y subirá la multa mínima por vandalizar el espacio público.',ps:['pp'],ref:'PP nº22-24'}],
+ [{p:'vox',why:'Sin posición localizada sobre la Ley de Seguridad Ciudadana; el programa examinado propone más medios y protección para las Fuerzas de Seguridad (nº83-84).'}]),
+Q('La eutanasia','🕯️',[
+ {x:'Garantizar el ejercicio efectivo del derecho a la eutanasia.',ps:['psoe','fa'],ref:'PSOE nº147 · FA §18.8'},
+ {x:'Garantizar los cuidados paliativos y una vida digna hasta el final.',ps:['pp'],ref:'PP nº226'},
+ {x:'Defender el derecho a la vida desde la concepción hasta la muerte natural.',ps:['vox'],ref:'Vox nº98'}]),
+Q('El Ingreso Mínimo Vital','💳',[
+ {x:'Limitarlo a las necesidades de los españoles con menos recursos y promover el retorno de los inmigrantes que lo estén cobrando.',ps:['vox'],ref:'Vox nº22'},
+ {x:'Potenciarlo con pasarelas que automaticen y simplifiquen su concesión, adecuando las cuantías.',ps:['psoe'],ref:'PSOE nº89'},
+ {x:'Transformarlo para que la prestación alcance el 60% de la renta mediana de la comunidad autónoma de residencia.',ps:['fa'],ref:'FA §2.1'}],
+ [{p:'pp',why:'Sin posición localizada sobre el Ingreso Mínimo Vital en el programa examinado.'}]),
+Q('Las ayudas europeas al campo (la PAC)','🚜',[
+ {x:'Defender una PAC fuerte orientada a las explotaciones profesionales, familiares y de pequeña y mediana dimensión.',ps:['psoe'],ref:'PSOE nº267'},
+ {x:'Mantener la financiación de la PAC, la pesca y el POSEI sin recortes en el próximo marco europeo.',ps:['pp'],ref:'PP nº197'},
+ {x:'Rechazar la reducción del presupuesto de la PAC y acabar con las exigencias burocráticas y medioambientales.',ps:['vox'],ref:'Vox nº52'},
+ {x:'Una Ley de Futuro de la Agricultura que garantice la renta agraria.',ps:['fa'],ref:'FA §7.1'}])
 ];
 const SRCS=[
  ['PP','https://www.pp.es/wp-content/uploads/2026/11/PROGRAMA-ELECTORAL-PP-2026-RECONSTRUCCION-NACIONAL.pdf'],
  ['PSOE','https://lafuerzadelagente.es/programa/PROGRAMA_PSOE_29N26.pdf'],
  ['Frente Amplio','https://frenteamplio.info/pdf/ProgramaFrenteAmplio.pdf'],
- ['Vox','https://votasentidocomun.es/general/files/programa-elecct-vox.pdf']];
+ ['Vox','https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf']];
 
-let cur=0, ans={}, order=[];
+const QUICK=new Set(['El precio del alquiler','Las centrales nucleares','La jornada laboral','La regularización de quien ya está en situación irregular','La ayuda por tener hijos','Los impuestos','La educación','Las pensiones','La defensa','El aborto','La Ley Trans','La vivienda okupada','La sanidad y los extranjeros en situación irregular','El modelo territorial','La vivienda pública','Comprar la primera vivienda','Las listas de espera y la sanidad pública','La violencia machista y las leyes de igualdad','La memoria democrática','Las lenguas cooficiales','El agua y la sequía','Los menores y las redes sociales','La inteligencia artificial','Los autónomos','Las emergencias y las catástrofes']);
+let cur=0, ans={}, order=[], QS=[];
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0)}
-function start(){
+function start(mode){
+  QS=QUESTIONS.filter(q=>mode==='full'||QUICK.has(q.q));
   cur=0;ans={};
-  order=QUESTIONS.map(Q=>{const idx=Q.o.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}return idx});
+  order=QS.map(Q=>{const idx=Q.o.map((_,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]]}return idx});
   renderQ();show('s-quiz');
 }
 function renderQ(){
-  const Q=QUESTIONS[cur];
-  document.getElementById('pbar').style.width=(cur/QUESTIONS.length*100)+'%';
-  document.getElementById('qnum').textContent='Pregunta '+(cur+1)+' de '+QUESTIONS.length;
+  const Q=QS[cur];
+  document.getElementById('pbar').style.width=(cur/QS.length*100)+'%';
+  document.getElementById('qnum').textContent='Pregunta '+(cur+1)+' de '+QS.length;
   document.getElementById('qtitle').textContent=Q.e+' '+Q.q;
   const box=document.getElementById('opts');box.innerHTML='';
   order[cur].forEach(oi=>{
@@ -232,15 +372,16 @@ function renderQ(){
   none.onclick=()=>{ans[cur]={none:true};box.querySelectorAll('.opt').forEach(x=>x.classList.remove('y'));renderNone(box)};
   box.appendChild(none);
   renderNone(box);
-  document.getElementById('nextBtn').textContent=(cur===QUESTIONS.length-1)?'Ver mi resultado':'Siguiente';
+  document.getElementById('nextBtn').textContent=(cur===QS.length-1)?'Ver mi resultado':'Siguiente';
 }
 function renderNone(box){
   const isNone=ans[cur]&&ans[cur].none;
   const none=box.querySelector('.none');if(none)none.className='opt none'+(isNone?' y':'');
 }
-function advance(){cur++;if(cur>=QUESTIONS.length){renderResults();show('s-res')}else renderQ()}
+function advance(){cur++;if(cur>=QS.length){renderResults();show('s-res')}else renderQ()}
 function restart(){show('s-intro')}
 function renderResults(){
+  const QUESTIONS=QS;
   const pk=Object.keys(PARTIES);
   const tally={};pk.forEach(p=>tally[p]=[]);
   let answered=0;
