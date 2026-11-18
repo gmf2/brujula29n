@@ -57,6 +57,7 @@
   .saved{background:#fff;border:2px solid #E91E63;border-radius:16px;padding:16px;margin:14px 0;display:grid;gap:10px}
   .saved p{font-size:14px;line-height:1.5;color:var(--mut)}
   .saved .btn{padding:14px;font-size:16px}
+  #replacePanel{position:fixed;z-index:10;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px);max-width:480px;background:#fff;border:2px solid var(--acc);border-radius:16px;padding:20px;box-shadow:0 0 0 100vmax rgba(34,29,26,.4);display:grid;gap:12px}
   .save-status{font-size:14px;line-height:1.5;color:var(--mut);margin:8px 0}
   .btn:focus-visible{outline:3px solid var(--acc2);outline-offset:3px}
   .rtitle{font-size:30px;font-weight:900;margin:18px 0 4px;letter-spacing:-.4px}
@@ -399,7 +400,6 @@ function cancelReplace(){pendingMode=null;document.getElementById('replacePanel'
 function askReplace(mode){
   pendingMode=mode;document.getElementById('replacePanel').hidden=false;
   document.getElementById('introStatus').textContent='';
-  document.getElementById('replacePanel').scrollIntoView({block:'center'});
   document.querySelector('#replacePanel button').focus({preventScroll:true});
   document.getElementById('replaceInfo').textContent=mode?'Empezar otro test borrará el anterior guardado. ¿Quieres borrarlo y empezar el nuevo?':'¿Quieres borrar de este navegador el test guardado? No se podrá recuperar.';
 }
