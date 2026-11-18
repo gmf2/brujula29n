@@ -398,6 +398,9 @@ function loadSave(){
 function cancelReplace(){pendingMode=null;document.getElementById('replacePanel').hidden=true}
 function askReplace(mode){
   pendingMode=mode;document.getElementById('replacePanel').hidden=false;
+  document.getElementById('introStatus').textContent='';
+  document.getElementById('replacePanel').scrollIntoView({block:'center'});
+  document.querySelector('#replacePanel button').focus({preventScroll:true});
   document.getElementById('replaceInfo').textContent=mode?'Empezar otro test borrará el anterior guardado. ¿Quieres borrarlo y empezar el nuevo?':'¿Quieres borrar de este navegador el test guardado? No se podrá recuperar.';
 }
 function askDelete(){askReplace(null)}
